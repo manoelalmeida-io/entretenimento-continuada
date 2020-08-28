@@ -22,41 +22,18 @@ public class EntretenimentoController {
 
   ControleEntretenimento controle = new ControleEntretenimento();
 
+  /* LISTAR */
   @GetMapping
   public List<Entretenimento> todos() {
     return controle.todos();
   }
 
-  @GetMapping("/qualidade/{qualidade}")
-  public List<Entretenimento> qualidadeAcima(@PathVariable Double qualidade) {
-    return controle.filtrarQualidadeAcima(qualidade);
+  @GetMapping("/filtrar/{filtro}")
+  public List<Entretenimento> filtrar(@PathVariable String filtro) {
+    return controle.filtrar(filtro);
   }
 
-  @GetMapping("/qualidade/media")
-  public Double mediaQualidade() {
-    return controle.mediaQualidade();
-  }
-
-  @GetMapping("/total/horas")
-  public Double totalHoras() {
-    return controle.totalHoras();
-  }
-
-  @GetMapping("/filmes")
-  public List<Entretenimento> filmes() {
-    return controle.todosFilmes();
-  }
-
-  @GetMapping("/series")
-  public List<Entretenimento> series() {
-    return controle.todosSeries();
-  }
-
-  @GetMapping("/jogos")
-  public List<Entretenimento> jogos() {
-    return controle.todosJogos();
-  }
-
+  /* CADASTRAR */
   @PostMapping("/filmes")
   public void cadastrarFilme(@RequestBody Filme filme) {
     controle.adicionaEntretenimento(filme);
@@ -72,8 +49,25 @@ public class EntretenimentoController {
     controle.adicionaEntretenimento(jogo);
   }
 
+  /* DELETAR */
   @DeleteMapping("/{id}")
   public void removeFilmes(@PathVariable Integer id) {
     controle.removeEntretenimento(id - 1);
+  }
+
+  /* OUTROS */
+  @GetMapping("/qualidade/{qualidade}")
+  public List<Entretenimento> qualidadeAcima(@PathVariable Double qualidade) {
+    return controle.filtrarQualidadeAcima(qualidade);
+  }
+
+  @GetMapping("/qualidade/media")
+  public Double mediaQualidade() {
+    return controle.mediaQualidade();
+  }
+
+  @GetMapping("/total/horas")
+  public Double totalHoras() {
+    return controle.totalHoras();
   }
 }

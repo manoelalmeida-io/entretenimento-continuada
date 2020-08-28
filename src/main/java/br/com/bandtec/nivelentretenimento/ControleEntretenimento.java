@@ -31,14 +31,20 @@ public class ControleEntretenimento {
     return entretenimentos;
   }
 
-  public List<Entretenimento> todosFilmes() {
-    List<Entretenimento> filmes = new ArrayList<>();
+  public List<Entretenimento> filtrar(String filtro) {
+    List<Entretenimento> filtrados = new ArrayList<>();
     for (Entretenimento entretenimento : entretenimentos) {
-      if (entretenimento instanceof Filme) {
-        filmes.add(entretenimento);
+      if (filtro.equals("filmes") && entretenimento instanceof Filme) {
+        filtrados.add(entretenimento);
+      }
+      else if (filtro.equals("series") && entretenimento instanceof Serie) {
+        filtrados.add(entretenimento);
+      }
+      else if (filtro.equals("jogos") && entretenimento instanceof Jogo) {
+        filtrados.add(entretenimento);
       }
     }
-    return filmes;
+    return filtrados;
   }
 
   public List<Entretenimento> todosSeries() {
