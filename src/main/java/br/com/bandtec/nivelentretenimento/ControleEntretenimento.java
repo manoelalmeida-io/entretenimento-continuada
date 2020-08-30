@@ -14,9 +14,6 @@ public class ControleEntretenimento {
 
   public ControleEntretenimento() {
     this.entretenimentos = new ArrayList<>();
-    this.entretenimentos.add(new Filme("a", 1, Genero.ACAO, "a", 9.9, 90));
-    this.entretenimentos.add(new Serie("b", 1, Genero.ANIMACAO, "b", 9.2, 60, 40));
-    this.entretenimentos.add(new Jogo("c", "Super Nintendo", 1, Genero.PLATAFORMA, 10.0, 15, Dificuldade.NORMAL));
   }
 
   public void adicionaEntretenimento(Entretenimento e) {
@@ -45,26 +42,6 @@ public class ControleEntretenimento {
       }
     }
     return filtrados;
-  }
-
-  public List<Entretenimento> todosSeries() {
-    List<Entretenimento> filmes = new ArrayList<>();
-    for (Entretenimento entretenimento : entretenimentos) {
-      if (entretenimento instanceof Serie) {
-        filmes.add(entretenimento);
-      }
-    }
-    return filmes;
-  }
-
-  public List<Entretenimento> todosJogos() {
-    List<Entretenimento> filmes = new ArrayList<>();
-    for (Entretenimento entretenimento : entretenimentos) {
-      if (entretenimento instanceof Jogo) {
-        filmes.add(entretenimento);
-      }
-    }
-    return filmes;
   }
 
   public List<Entretenimento> filtrarQualidadeAcima(Double qualidade) {
