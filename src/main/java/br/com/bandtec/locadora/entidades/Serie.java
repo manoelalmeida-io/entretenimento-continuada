@@ -1,7 +1,4 @@
-package br.com.bandtec.nivelentretenimento.entidades;
-
-import br.com.bandtec.nivelentretenimento.tipos.Genero;
-import com.fasterxml.jackson.annotation.JsonGetter;
+package br.com.bandtec.locadora.entidades;
 
 public class Serie extends Video {
 
@@ -11,7 +8,7 @@ public class Serie extends Video {
   public Serie(
       String nome,
       Integer anoLancamento,
-      Genero genero,
+      String genero,
       String diretor,
       Double notaImdb,
       Integer duracaoEpisodioMinutos,
@@ -22,19 +19,18 @@ public class Serie extends Video {
     this.numeroEpisodios = numeroEpisodios;
   }
 
-  @JsonGetter("horas")
   @Override
-  public Double calcularHorasEntretenimento() {
-    return duracaoEpisodioMinutos * numeroEpisodios / 60.0;
+  public Double getPrecoAluguelPorDia() {
+    if (2020 - getAnoLancamento() < 5) {
+      return numeroEpisodios / 10 * (1 + getNotaImdb() / 10);
+    } else {
+      return numeroEpisodios/ 10 * (1 + getNotaImdb() / 10);
+    }
   }
 
   @Override
-  public String toString() {
-    return "Serie{" +
-        super.toString() +
-        "duracaoEpisodioMinutos=" + duracaoEpisodioMinutos +
-        ", numeroEpisodios=" + numeroEpisodios +
-        '}';
+  public Double getTotalHoras() {
+    return duracaoEpisodioMinutos * numeroEpisodios / 60.0;
   }
 
   public Integer getDuracaoEpisodioMinutos() {

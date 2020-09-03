@@ -1,21 +1,19 @@
-package br.com.bandtec.nivelentretenimento.entidades;
+package br.com.bandtec.locadora.entidades;
 
-import br.com.bandtec.nivelentretenimento.Entretenimento;
-import br.com.bandtec.nivelentretenimento.tipos.Genero;
-import com.fasterxml.jackson.annotation.JsonGetter;
+import br.com.bandtec.locadora.Alugavel;
 
-public abstract class Video implements Entretenimento {
+public abstract class Video implements Alugavel {
 
   private String nome;
   private Integer anoLancamento;
-  private Genero genero;
+  private String genero;
   private String diretor;
   private Double notaImdb;
 
   public Video(
       String nome,
       Integer anoLancamento,
-      Genero genero,
+      String genero,
       String diretor,
       Double notaImdb
   ) {
@@ -26,11 +24,7 @@ public abstract class Video implements Entretenimento {
     this.notaImdb = notaImdb;
   }
 
-  @JsonGetter("qualidade")
-  @Override
-  public Double calcularQualidadeEntretenimento() {
-    return getNotaImdb() * 2 * getGenero().getPontuacao();
-  }
+  public abstract Double getTotalHoras();
 
   @Override
   public String toString() {
@@ -51,7 +45,7 @@ public abstract class Video implements Entretenimento {
     return anoLancamento;
   }
 
-  public Genero getGenero() {
+  public String getGenero() {
     return genero;
   }
 
