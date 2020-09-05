@@ -1,14 +1,15 @@
 package br.com.bandtec.locadora.controller;
 
 import br.com.bandtec.locadora.Alugavel;
-import br.com.bandtec.locadora.ControleAluguel;
-import br.com.bandtec.locadora.entidades.Aluguel;
+import br.com.bandtec.locadora.ControleCatalogo;
 import br.com.bandtec.locadora.entidades.Filme;
 import br.com.bandtec.locadora.entidades.Jogo;
 import br.com.bandtec.locadora.entidades.Serie;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,69 +19,69 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/alugaveis")
-public class AlugavelController {
+@RequestMapping("/catalogo")
+public class CatalogoController {
 
-  ControleAluguel controle = new ControleAluguel();
+  public static ControleCatalogo controle = new ControleCatalogo();
 
-  /* LISTAR */
+  public CatalogoController() {
+    if (controle.listarCatalogo().isEmpty()) {
+      this.popularLista();
+    }
+  }
+
   @GetMapping
-  public List<Alugavel> listarAlugaveis() {
-    if (controle.listarAlugaveis().isEmpty()) {
-      this.popularLista();
+  public ResponseEntity listarAlugaveis() {
+    List<Alugavel> catalogo = controle.listarCatalogo();
+
+    if (catalogo.isEmpty()) {
+      return ResponseEntity.noContent().build();
     }
 
-    return controle.listarAlugaveis();
+    return ResponseEntity.ok(catalogo);
   }
 
-  @GetMapping("/filtrar/{filtro}")
-  public List<Alugavel> filtrarAlugaveis(@PathVariable String filtro) {
-    if (controle.filtrarAlugaveis(filtro).isEmpty()) {
-      this.popularLista();
+  @GetMapping("/{filtro}")
+  public ResponseEntity filtrarAlugaveis(@PathVariable String filtro) {
+    List<Alugavel> catalogoFiltrado = controle.filtrarCatalogo(filtro);
+
+    if (catalogoFiltrado.isEmpty()) {
+      return ResponseEntity.noContent().build();
     }
 
-    return controle.filtrarAlugaveis(filtro);
+    return ResponseEntity.ok(catalogoFiltrado);
   }
 
-  @GetMapping("/alugueis")
-  public List<Aluguel> listarAlugueis() {
-    return controle.listarAlugueis();
-  }
-
-  @GetMapping("/alugueis/filtrar/{filtro}")
-  public List<Aluguel> filtrarAlugueis(@PathVariable String filtro) {
-    return controle.filtrarAlugueis(filtro);
-  }
-
-  /* CADASTRAR */
   @PostMapping("/filmes")
-  public void cadastrarFilme(@RequestBody Filme filme) {
-    controle.adicionaAlugavel(filme);
+  public ResponseEntity cadastrarFilme(@RequestBody Filme filme) {
+    controle.adicionaCatalogo(filme);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @PostMapping("/series")
-  public void cadastrarSerie(@RequestBody Serie serie) {
-    controle.adicionaAlugavel(serie);
+  public ResponseEntity cadastrarSerie(@RequestBody Serie serie) {
+    controle.adicionaCatalogo(serie);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @PostMapping("/jogos")
-  public void cadastrarJogos(@RequestBody Jogo jogo) {
-    controle.adicionaAlugavel(jogo);
+  public ResponseEntity cadastrarJogos(@RequestBody Jogo jogo) {
+    controle.adicionaCatalogo(jogo);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  /* DELETAR */
   @DeleteMapping("/{id}")
-  public void removeFilmes(@PathVariable Integer id) {
-    controle.removeAlugavel(id - 1);
-  }
+  public ResponseEntity removeFilmes(@PathVariable Integer id) {
+    if (controle.listarCatalogo().size() < id) {
+      return ResponseEntity.notFound().build();
+    }
 
-  @GetMapping("alugar/{id}/{dias}")
-  public Aluguel alugar(@PathVariable Integer id, @PathVariable Integer dias) {
-    return controle.alugar(id, dias);
+    controle.removeCatalogo(id - 1);
+    return ResponseEntity.ok().build();
   }
 
   public void popularLista() {
-    this.controle.adicionaAlugavel(new Filme(
+    controle.adicionaCatalogo(new Filme(
         "Toy Story 4",
         2019,
         "Animação",
@@ -88,7 +89,7 @@ public class AlugavelController {
         7.8,
         100
     ));
-    this.controle.adicionaAlugavel(new Filme(
+    controle.adicionaCatalogo(new Filme(
         "A Origem",
         2010,
         "Ação",
@@ -96,7 +97,7 @@ public class AlugavelController {
         8.8,
         148
     ));
-    this.controle.adicionaAlugavel(new Filme(
+    controle.adicionaCatalogo(new Filme(
         "Matrix",
         1999,
         "Ação",
@@ -104,7 +105,7 @@ public class AlugavelController {
         8.7,
         136
     ));
-    this.controle.adicionaAlugavel(new Serie(
+    controle.adicionaCatalogo(new Serie(
         "Stranger Things",
         2016,
         "Drama, fantasia",
@@ -113,7 +114,7 @@ public class AlugavelController {
         51,
         25
     ));
-    this.controle.adicionaAlugavel(new Serie(
+    controle.adicionaCatalogo(new Serie(
         "Game of Thrones",
         2011,
         "Ação",
@@ -122,7 +123,7 @@ public class AlugavelController {
         57,
         73
     ));
-    this.controle.adicionaAlugavel(new Serie(
+    controle.adicionaCatalogo(new Serie(
         "Fullmetal Alchemist Brotherhood",
         2009,
         "Ação",
@@ -131,21 +132,21 @@ public class AlugavelController {
         24,
         64
     ));
-    this.controle.adicionaAlugavel(new Jogo(
+    controle.adicionaCatalogo(new Jogo(
         "Super Mario World",
         "Super Nintendo",
         1990,
         "Plataforma",
         8.5
     ));
-    this.controle.adicionaAlugavel(new Jogo(
+    controle.adicionaCatalogo(new Jogo(
         "Star Fox 64",
         "Nintendo 64",
         1997,
         "Ação",
         8.7
     ));
-    this.controle.adicionaAlugavel(new Jogo(
+    controle.adicionaCatalogo(new Jogo(
         "Sonic the Hedgehog 2",
         "Mega Drive",
         1992,
